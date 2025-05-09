@@ -5,11 +5,22 @@ package model;
  */
 public class MapModel {
     int[][] matrix;
+    private int[][] originalMatrix;
 
 
-    public MapModel(int[][] matrix) {
-        this.matrix = matrix;
-    }
+    public MapModel(int[][] matrix) {this.matrix = matrix;this.originalMatrix = copyMatrix(matrix); }
+
+    public int[][] copyMatrix (int[][] matrix){
+        int[][] copy = new int[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            System.arraycopy(matrix[i],0,copy[i],0,matrix[i].length);
+        }
+        return copy;
+    }//保留了原来matrix的样子
+
+    public void resetOriginalMatrix() {
+        this.matrix = copyMatrix(originalMatrix);
+    }//把matrix还原为初始状态
 
     public int getWidth() {
         return this.matrix[0].length;

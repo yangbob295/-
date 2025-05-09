@@ -32,7 +32,7 @@ public class GamePanel extends ListenerPanel {
         this.setSize(model.getWidth() * GRID_SIZE + 4, model.getHeight() * GRID_SIZE + 4);
         this.model = model;
         this.selectedBox = null;
-        initialGame();
+        initialGame(model.getMatrix());
     }
 
     /*
@@ -42,13 +42,16 @@ public class GamePanel extends ListenerPanel {
                         {1, 2, 2, 1, 0},
                         {1, 1, 1, 1, 1}
      */
-    public void initialGame() {
+    public void initialGame(int[][] matrix) {
         this.steps = 0;
+        if (this.stepLabel != null) {
+            this.stepLabel.setText(String.format("Step: %d", this.steps));
+        }
         //copy a map
-        int[][] map = new int[model.getHeight()][model.getWidth()];
+        int[][] map = new int[matrix.length][matrix[0].length];
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
-                map[i][j] = model.getId(i, j);
+                map[i][j] = matrix[i][j];
             }
         }
         //build Component
@@ -76,6 +79,21 @@ public class GamePanel extends ListenerPanel {
                     map[i + 1][j] = 0;
                     map[i][j + 1] = 0;
                     map[i + 1][j + 1] = 0;
+                } else if (map[i][j] == 5) {
+                    box = new BoxComponent(Color.RED, i, j);
+                    box.setSize(GRID_SIZE, GRID_SIZE * 2);
+                    map[i][j] = 0;
+                    map[i + 1][j] = 0;
+                } else if (map[i][j] == 6) {
+                    box = new BoxComponent(Color.YELLOW, i, j);
+                    box.setSize(GRID_SIZE, GRID_SIZE * 2);
+                    map[i][j] = 0;
+                    map[i + 1][j] = 0;
+                } else if (map[i][j] == 7) {
+                    box = new BoxComponent(Color.CYAN, i, j);
+                    box.setSize(GRID_SIZE, GRID_SIZE * 2);
+                    map[i][j] = 0;
+                    map[i + 1][j] = 0;
                 }
                 if (box != null) {
                     box.setLocation(j * GRID_SIZE + 2, i * GRID_SIZE + 2);
@@ -85,6 +103,20 @@ public class GamePanel extends ListenerPanel {
             }
         }
         this.repaint();
+    }
+
+    public void clearAllBoxFromPanel(){
+        for (BoxComponent box : boxes) {
+            removeBoxFromPanel(box);
+        }
+        this.boxes.clear();
+        this.repaint();
+    }
+
+    public BoxComponent removeBoxFromPanel(BoxComponent box){
+        this.remove(box);
+        this.revalidate();
+        return box;
     }
 
     @Override
