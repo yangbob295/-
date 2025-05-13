@@ -189,7 +189,16 @@ public class GamePanel extends ListenerPanel {
     public void afterMove() {
         this.steps++;
         this.stepLabel.setText(String.format("Step: %d", this.steps));
+        whetherVictoryOrNot();
     }
+
+    public void whetherVictoryOrNot() {
+        if (model.getMatrix()[3][1] == 4 && model.getMatrix()[3][2] == 4 && model.getMatrix()[4][1] == 4 && model.getMatrix()[4][2] == 4) {
+            System.out.println("You win!");
+            SwingUtilities.invokeLater(() -> new VictoryFrame(600, 450));
+        }
+    }
+
 
     public void setStepLabel(JLabel stepLabel) {
         this.stepLabel = stepLabel;

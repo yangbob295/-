@@ -45,4 +45,12 @@ public class MapModel {
     public boolean checkInHeightSize(int row) {
         return row >= 0 && row < matrix.length;
     }
+
+//    public boolean isVictory() {
+//        if (matrix[4][2] == 4 && matrix[4][3] == 4 && matrix[5][2] == 4 && matrix[5][3] == 4) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 }
