@@ -14,6 +14,7 @@ import java.util.List;
  * It is the subclass of ListenerPanel, so that it should implement those four methods: do move left, up, down ,right.
  * The class contains a grids, which is the corresponding GUI view of the matrix variable in MapMatrix.
  */
+//专指方格盘
 public class GamePanel extends ListenerPanel {
     private List<BoxComponent> boxes;
     private MapModel model;
@@ -22,6 +23,9 @@ public class GamePanel extends ListenerPanel {
     private int steps;
     private final int GRID_SIZE = 50;
     private BoxComponent selectedBox;
+
+    private MutilchoiceFrame mutilchoiceFrame;
+
 
 
     public GamePanel(MapModel model) {
@@ -42,6 +46,7 @@ public class GamePanel extends ListenerPanel {
                         {1, 2, 2, 1, 0},
                         {1, 1, 1, 1, 1}
      */
+    //初始化游戏
     public void initialGame(int[][] matrix) {
         this.steps = 0;
         if (this.stepLabel != null) {
@@ -189,15 +194,25 @@ public class GamePanel extends ListenerPanel {
     public void afterMove() {
         this.steps++;
         this.stepLabel.setText(String.format("Step: %d", this.steps));
-        whetherVictoryOrNot();
+        this.whetherVictoryOrNot();
     }
 
     public void whetherVictoryOrNot() {
-        if (model.getMatrix()[3][1] == 4 && model.getMatrix()[3][2] == 4 && model.getMatrix()[4][1] == 4 && model.getMatrix()[4][2] == 4) {
+        if (model.getMatrix()[4][1] == 4 && model.getMatrix()[4][2] == 4 && model.getMatrix()[3][1] == 4 && model.getMatrix()[3][2] == 4) {
             System.out.println("You win!");
-            SwingUtilities.invokeLater(() -> new VictoryFrame(600, 450));
+            SwingUtilities.invokeLater(() ->{
+                VictoryFrame victoryFrame=new VictoryFrame(600, 450);
+                victoryFrame.setMutilchoiceFrame(mutilchoiceFrame);
+                if(this!=null){
+                    this.setVisible(false);
+                }
+                if (mutilchoiceFrame != null && mutilchoiceFrame.getGameframe() != null) {
+                    mutilchoiceFrame.getGameframe().setVisible(false); // 隐藏 GameFrame
+                }
+            });
         }
     }
+
 
 
     public void setStepLabel(JLabel stepLabel) {
@@ -216,4 +231,9 @@ public class GamePanel extends ListenerPanel {
     public int getGRID_SIZE() {
         return GRID_SIZE;
     }
+
+    public void setMutilchoiceFrame(MutilchoiceFrame mutilchoiceFrame){
+        this.mutilchoiceFrame=mutilchoiceFrame;
+    }
+
 }

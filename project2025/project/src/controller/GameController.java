@@ -3,11 +3,7 @@ package controller;
 import model.Direction;
 import model.MapModel;
 import view.game.BoxComponent;
-import view.game.GameFrame;
 import view.game.GamePanel;
-import view.game.VictoryFrame;
-
-import javax.swing.*;
 
 /**
  * It is a bridge to combine GamePanel(view) and MapMatrix(model) in one game.
@@ -32,7 +28,6 @@ public class GameController {
     }
 
     public boolean doMove(int row, int col, Direction direction) {
-        boolean moved = false;
         //对单个的box进行操作
         if (model.getId(row, col) == 1) {
             int nextRow = row + direction.getRow();
@@ -46,7 +41,7 @@ public class GameController {
                     box.setCol(nextCol);
                     box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
                     box.repaint();
-                    moved = true;
+                    return true;
                 }
             }
         }
@@ -71,7 +66,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol] = 2;
                         model.getMatrix()[nextRow][nextCol + 1] = 2;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }
                 }
             }
@@ -81,7 +76,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 2;
                 model.getMatrix()[nextRow][nextCol + 1] = 2;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以左
             else if (model.checkInWidthSize(nextCol + 1) &&model.checkInWidthSize(nextCol) && model.getId(nextRow, nextCol) == 2 && model.getId(nextRow, nextCol + 1) == 0) {
                 model.getMatrix()[row][col] = 0;
@@ -89,7 +84,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 2;
                 model.getMatrix()[nextRow][nextCol + 1] = 2;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以右
         }
 
@@ -107,7 +102,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol] = 3;
                         model.getMatrix()[nextRow + 1][nextCol] = 3;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }
                 }
             }
@@ -117,7 +112,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 3;
                 model.getMatrix()[nextRow + 1][nextCol] = 3;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以上
             else if (model.checkInHeightSize(nextRow + 1) &&model.checkInHeightSize(nextRow) && model.getId(nextRow, nextCol) == 3 && model.getId(nextRow + 1, nextCol) == 0) {
                 model.getMatrix()[row][col] = 0;
@@ -125,7 +120,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 3;
                 model.getMatrix()[nextRow + 1][nextCol] = 3;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以
         }
         //第二类:55
@@ -140,7 +135,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol] = 5;
                         model.getMatrix()[nextRow + 1][nextCol] = 5;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }
                 }
             }
@@ -158,7 +153,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 5;
                 model.getMatrix()[nextRow + 1][nextCol] = 5;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以
         }
         //第3类:66
@@ -173,7 +168,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol] = 6;
                         model.getMatrix()[nextRow + 1][nextCol] = 6;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }
                 }
             }
@@ -183,7 +178,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 6;
                 model.getMatrix()[nextRow + 1][nextCol] = 6;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以上
             else if (model.checkInHeightSize(nextRow + 1) &&model.checkInHeightSize(nextRow) && model.getId(nextRow, nextCol) == 6 && model.getId(nextRow + 1, nextCol) == 0) {
                 model.getMatrix()[row][col] = 0;
@@ -191,7 +186,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 6;
                 model.getMatrix()[nextRow + 1][nextCol] = 6;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以
         }
         //第4类:77
@@ -206,7 +201,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol] = 7;
                         model.getMatrix()[nextRow + 1][nextCol] = 7;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }
                 }
             }
@@ -216,7 +211,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 7;
                 model.getMatrix()[nextRow + 1][nextCol] = 7;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以上
             else if (model.checkInHeightSize(nextRow + 1) &&model.checkInHeightSize(nextRow) && model.getId(nextRow, nextCol) == 7 && model.getId(nextRow + 1, nextCol) == 0) {
                 model.getMatrix()[row][col] = 0;
@@ -224,7 +219,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol] = 7;
                 model.getMatrix()[nextRow + 1][nextCol] = 7;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以
         }
         if (model.getId(row, col) == 4) {
@@ -242,7 +237,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol+1] = 4;
                         model.getMatrix()[nextRow + 1][nextCol+1] = 4;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }if (model.getId(nextRow, nextCol) == 4 && model.getId(nextRow + 1, nextCol) == 4 && model.getId(nextRow, nextCol+1) == 0 && model.getId(nextRow + 1, nextCol+1) == 0) {
                         model.getMatrix()[row][col] = 0;
                         model.getMatrix()[row + 1][col] = 0;
@@ -253,7 +248,7 @@ public class GameController {
                         model.getMatrix()[nextRow][nextCol+1] = 4;
                         model.getMatrix()[nextRow + 1][nextCol+1] = 4;
                         updateBoxPosition(row, col, nextRow, nextCol);
-                        moved = true;
+                        return true;
                     }
                 }
             }
@@ -267,7 +262,7 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol+1] = 4;
                 model.getMatrix()[nextRow + 1][nextCol+1] = 4;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以上
             else if (model.checkInHeightSize(nextRow + 1) &&model.checkInHeightSize(nextRow) && model.getId(nextRow, nextCol) == 4 && model.getId(nextRow + 1, nextCol) == 0 && model.getId(nextRow + 1, nextCol+1) == 0) {
                 model.getMatrix()[row][col] = 0;
@@ -279,10 +274,12 @@ public class GameController {
                 model.getMatrix()[nextRow][nextCol+1] = 4;
                 model.getMatrix()[nextRow + 1][nextCol+1] = 4;
                 updateBoxPosition(row, col, nextRow, nextCol);
-                moved = true;
+                return true;
             }//可以下
+
         }
-        return moved;
+
+        return false;
     }
 
     private void updateBoxPosition(int row, int col, int nextRow, int nextCol) {
@@ -294,6 +291,5 @@ public class GameController {
     }
 
     //todo: add other methods such as loadGame, saveGame...
-
 
 }

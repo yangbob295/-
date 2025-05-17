@@ -2,6 +2,7 @@ package view.login;
 
 import view.FrameUtil;
 import view.game.GameFrame;
+import view.game.MutilchoiceFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,8 @@ public class LoginFrame extends JFrame {
     private JTextField password;
     private JButton submitBtn;
     private JButton resetBtn;
-    private GameFrame gameFrame;
+//    private GameFrame gameFrame;
+    private MutilchoiceFrame mutilchoiceFrame;
 
 
     public LoginFrame(int width, int height) {
@@ -27,16 +29,26 @@ public class LoginFrame extends JFrame {
         submitBtn = FrameUtil.createButton(this, "Confirm", new Point(40, 140), 100, 40);
         resetBtn = FrameUtil.createButton(this, "Reset", new Point(160, 140), 100, 40);
 
+//        submitBtn.addActionListener(e -> {
+//            System.out.println("Username = " + username.getText());
+//            System.out.println("Password = " + password.getText());
+//            if (this.gameFrame != null) {
+//                this.gameFrame.setVisible(true);
+//                this.setVisible(false);
+//            }
+//            //todo: check login info
+//        });
+
         submitBtn.addActionListener(e -> {
             System.out.println("Username = " + username.getText());
             System.out.println("Password = " + password.getText());
-            if (this.gameFrame != null) {
-                this.gameFrame.setVisible(true);
+            if (this.mutilchoiceFrame != null) {
+                this.mutilchoiceFrame.setVisible(true);
                 this.setVisible(false);
             }
             //todo: check login info
-
         });
+
         resetBtn.addActionListener(e -> {
             username.setText("");
             password.setText("");
@@ -46,7 +58,7 @@ public class LoginFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    public void setGameFrame(GameFrame gameFrame) {
-        this.gameFrame = gameFrame;
+    public void setMutilchoiceFrame(MutilchoiceFrame mutilchoiceFrame){
+        this.mutilchoiceFrame=mutilchoiceFrame;
     }
 }

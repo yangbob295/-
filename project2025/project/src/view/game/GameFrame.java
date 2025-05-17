@@ -7,31 +7,41 @@ import view.FrameUtil;
 
 import javax.swing.*;
 import java.awt.*;
-
+//过了登陆界面后的那个面板
 public class GameFrame extends JFrame {
 
     private GameController controller;
+
     private JButton restartBtn;
     private JButton loadBtn;
     private JButton saveBtn;
-
+    private JButton backBth;
     private JLabel stepLabel;
-    private GamePanel gamePanel;
     private User user;
 
-    public GameFrame(int width, int height, MapModel mapModel) {
-        this.setTitle("2025 CS109 Project Demo");
+    private GamePanel gamePanel;
+
+    private MutilchoiceFrame mutilchoiceFrame;
+
+
+    public GameFrame(int width, int height, MapModel mapModel, MutilchoiceFrame mutilchoiceFrame) {
+        this.setTitle("平静的海面培养不出优秀的水手");
         this.setLayout(null);
         this.setSize(width, height);
+        this.mutilchoiceFrame=mutilchoiceFrame;
+
         gamePanel = new GamePanel(mapModel);
         gamePanel.setLocation(30, height / 2 - gamePanel.getHeight() / 2);
         //此处添加了location修改，初始为30
+        gamePanel.setMutilchoiceFrame(this.mutilchoiceFrame);
         this.add(gamePanel);
+
         this.controller = new GameController(gamePanel, mapModel);
 
         this.restartBtn = FrameUtil.createButton(this, "Restart", new Point(gamePanel.getWidth() + 80, 120), 80, 50);
         this.loadBtn = FrameUtil.createButton(this, "Load", new Point(gamePanel.getWidth() + 80, 210), 80, 50);
         this.saveBtn = FrameUtil.createButton(this, "Save", new Point(gamePanel.getWidth() + 80, 300), 80, 50);
+        this.backBth=FrameUtil.createButton(this, "返回", new Point(gamePanel.getWidth() + 180, 300), 80, 50);
         this.stepLabel = FrameUtil.createJLabel(this, "Start", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 70), 180, 50);
         gamePanel.setStepLabel(stepLabel);
 
@@ -46,10 +56,15 @@ public class GameFrame extends JFrame {
         });
         //todo: add other button here
 
+        this.backBth.addActionListener(e -> {
+            if (this.mutilchoiceFrame != null) {
+                this.mutilchoiceFrame.setVisible(true);
+                this.setVisible(false);
+            }
+        });
 
         this.saveBtn.addActionListener(e -> {
-//            controller.saveGame(user);savegame还没写
-//待完成：-------------------------------------------------------------------
+
             gamePanel.requestFocusInWindow();//enable key listener
         });
 
@@ -57,5 +72,11 @@ public class GameFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
+
+    public void setMutilchoiceFrame(MutilchoiceFrame mutilchoiceFrame){
+
+    }
+
+
 
 }
