@@ -2,8 +2,12 @@ package controller;
 
 import model.Direction;
 import model.MapModel;
+import user.User;
 import view.game.BoxComponent;
 import view.game.GamePanel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * It is a bridge to combine GamePanel(view) and MapMatrix(model) in one game.
@@ -11,11 +15,13 @@ import view.game.GamePanel;
  */
 public class GameController {
     private final GamePanel view;
-    private final MapModel model;
+    private MapModel model;
+    private MapModel modelcopy;
 
     public GameController(GamePanel view, MapModel model) {
         this.view = view;
         this.model = model;
+        this.modelcopy=model;
         view.setController(this);
     }
 
@@ -24,7 +30,7 @@ public class GameController {
         System.out.println("Do restart game here");
         this.model.resetOriginalMatrix();
         this.view.clearAllBoxFromPanel();
-        this.view.initialGame(model.getMatrix());
+        this.view.initialGame(modelcopy.getMatrix(),0,0);
     }
 
     public boolean doMove(int row, int col, Direction direction) {
@@ -49,15 +55,6 @@ public class GameController {
         if (model.getId(row, col) == 2) {
             int nextRow = row + direction.getRow();
             int nextCol = col + direction.getCol();
-//            if (model.checkInWidthSize(nextCol + 1) &&model.checkInWidthSize(nextCol) && model.getId(nextRow, nextCol) == 0 && model.getId(nextRow, nextCol + 1) == 0) {
-//                model.getMatrix()[row][col] = 0;
-//                model.getMatrix()[row][col + 1] = 0;
-//                model.getMatrix()[nextRow][nextCol] = 2;
-//                model.getMatrix()[nextRow][nextCol + 1] = 2;
-//                updateBoxPosition(row, col, nextRow, nextCol);
-//                return true;
-//            }//只能满足上下的移动
-//            //此时撞边界会超限
             if ((direction.getRow() == -1 || direction.getRow() == 1) && direction.getCol() == 0) {
                 if (model.checkInHeightSize(nextRow) && model.checkInWidthSize(nextCol) && model.checkInWidthSize(nextCol + 1)) {
                     if (model.getId(nextRow, nextCol) == 0 && model.getId(nextRow, nextCol + 1) == 0) {
@@ -290,6 +287,22 @@ public class GameController {
         box.repaint();
     }
 
+    public MapModel getModel() {
+        return model;
+    }
+
+
+    public void loadGame(MapModel newModel, int loadStep, int loadSecond) {
+        this.model = newModel;
+        this.view.setModel(newModel);
+        view.clearAllBoxFromPanel();
+        view.initialGame(model.getMatrix(),loadStep,loadSecond);
+    }
+
+
+
     //todo: add other methods such as loadGame, saveGame...
+
+
 
 }

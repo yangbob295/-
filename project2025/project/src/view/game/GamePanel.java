@@ -3,6 +3,9 @@ package view.game;
 import controller.GameController;
 import model.Direction;
 import model.MapModel;
+import time.GameTimer;
+import voice.BackgroundMan;
+import voice.BackgroundMusic;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,11 +23,18 @@ public class GamePanel extends ListenerPanel {
     private MapModel model;
     private GameController controller;
     private JLabel stepLabel;
+    private JLabel timeLabel;
     private int steps;
+    private int steplimit=0;
+    private int timeLimit=0;
     private final int GRID_SIZE = 50;
     private BoxComponent selectedBox;
 
     private MutilchoiceFrame mutilchoiceFrame;
+
+    private BackgroundMusic backgroundMusic;
+
+    private GameTimer gameTimer;
 
 
 
@@ -36,7 +46,27 @@ public class GamePanel extends ListenerPanel {
         this.setSize(model.getWidth() * GRID_SIZE + 4, model.getHeight() * GRID_SIZE + 4);
         this.model = model;
         this.selectedBox = null;
-        initialGame(model.getMatrix());
+        gameTimer = new GameTimer(seconds -> {
+            timeLabel.setText(String.format("时间：%ds", seconds));
+
+            if(this.timeLimit!=0){
+                if(seconds > this.timeLimit) {
+                    SwingUtilities.invokeLater(() -> {
+                        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+                        if (parentWindow != null) parentWindow.setVisible(false);
+
+                        LoserFrame loserFrame = new LoserFrame(600, 450);
+                        loserFrame.setMutilchoiceFrame(mutilchoiceFrame);
+                        loserFrame.setVisible(true);
+
+                        this.backgroundMusic.stop();
+                        this.gameTimer.stop();
+                    });
+                }
+            }
+        });
+        this.gameTimer.start();
+        initialGame(model.getMatrix(),0,0);
     }
 
     /*
@@ -47,10 +77,14 @@ public class GamePanel extends ListenerPanel {
                         {1, 1, 1, 1, 1}
      */
     //初始化游戏
-    public void initialGame(int[][] matrix) {
-        this.steps = 0;
+    public void initialGame(int[][] matrix, int step, int seconds) {
+        this.steps = step;
+        this.gameTimer.setSeconds(seconds);
         if (this.stepLabel != null) {
-            this.stepLabel.setText(String.format("Step: %d", this.steps));
+            this.stepLabel.setText(String.format("步数: %d", this.steps));
+        }
+        if(this.timeLabel !=null){
+            this.timeLabel.setText(String.format("时间：%d",this.gameTimer.getSeconds()));
         }
         //copy a map
         int[][] map = new int[matrix.length][matrix[0].length];
@@ -194,21 +228,48 @@ public class GamePanel extends ListenerPanel {
     public void afterMove() {
         this.steps++;
         this.stepLabel.setText(String.format("Step: %d", this.steps));
+        BackgroundMan backgroundMan=new BackgroundMan("resource\\sound\\man.wav");
         this.whetherVictoryOrNot();
+        if(this.steplimit!=0){
+            this.whetherLoserStep();
+        }
     }
 
     public void whetherVictoryOrNot() {
-        if (model.getMatrix()[4][1] == 4 && model.getMatrix()[4][2] == 4 && model.getMatrix()[3][1] == 4 && model.getMatrix()[3][2] == 4) {
+        if (model.isVictory()) {
             System.out.println("You win!");
-            SwingUtilities.invokeLater(() ->{
-                VictoryFrame victoryFrame=new VictoryFrame(600, 450);
+            SwingUtilities.invokeLater(() -> {
+                // 关闭当前 GameFrame
+                Window parentWindow = SwingUtilities.getWindowAncestor(this);
+                if (parentWindow != null) {
+                    parentWindow.setVisible(false);
+                }
+                // 显示 VictoryFrame 并关联 MutilchoiceFrame
+                VictoryFrame victoryFrame = new VictoryFrame(600, 450);
                 victoryFrame.setMutilchoiceFrame(mutilchoiceFrame);
-                if(this!=null){
-                    this.setVisible(false);
+                victoryFrame.setVisible(true);
+
+                //音效
+                this.backgroundMusic.stop();
+                this.gameTimer.stop();
+            });
+        }
+    }
+
+    public void whetherLoserStep(){
+        if(this.steps>this.steplimit){
+            SwingUtilities.invokeLater(() -> {
+                Window parentWindow = SwingUtilities.getWindowAncestor(this);
+                if (parentWindow != null) {
+                    parentWindow.setVisible(false);
                 }
-                if (mutilchoiceFrame != null && mutilchoiceFrame.getGameframe() != null) {
-                    mutilchoiceFrame.getGameframe().setVisible(false); // 隐藏 GameFrame
-                }
+
+                LoserFrame loserFrame=new LoserFrame(600,450);
+                loserFrame.setMutilchoiceFrame(mutilchoiceFrame);
+                loserFrame.setVisible(true);
+
+                this.backgroundMusic.stop();
+                this.gameTimer.stop();
             });
         }
     }
@@ -217,6 +278,10 @@ public class GamePanel extends ListenerPanel {
 
     public void setStepLabel(JLabel stepLabel) {
         this.stepLabel = stepLabel;
+    }
+
+    public void setTimeLabel(JLabel timeLabel){
+        this.timeLabel=timeLabel;
     }
 
 
@@ -236,4 +301,31 @@ public class GamePanel extends ListenerPanel {
         this.mutilchoiceFrame=mutilchoiceFrame;
     }
 
+    public MutilchoiceFrame getMutilchoiceFrame() {
+        return this.mutilchoiceFrame;
+    }
+
+    public void setModel(MapModel model){
+        this.model=model;
+    }
+
+    public int getSteps() {
+        return steps;
+    }
+
+    public void setBackgroundMusic(BackgroundMusic backgroundMusic){
+        this.backgroundMusic=backgroundMusic;
+    }
+    public BackgroundMusic getBackgroundMusic(){
+        return backgroundMusic;
+    }
+
+    public void setSteplimit(int steplimit){ this.steplimit=steplimit; }
+    public int getSteplimit(){return steplimit; }
+
+    public void setTimeLimit(int timeLimit){this.timeLimit=timeLimit; }
+    public int getTimeLimit(){return timeLimit; }
+
+    public void setGameTimer(GameTimer gameTimer){this.gameTimer=gameTimer; }
+    public GameTimer getGameTimer(){return this.gameTimer; }
 }

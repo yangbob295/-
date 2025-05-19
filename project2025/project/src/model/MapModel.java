@@ -8,7 +8,10 @@ public class MapModel {
     private int[][] originalMatrix;
 
 
-    public MapModel(int[][] matrix) {this.matrix = matrix;this.originalMatrix = copyMatrix(matrix); }
+    public MapModel(int[][] matrix) {
+        this.matrix = matrix;
+        this.originalMatrix = copyMatrix(matrix);
+    }
 
     public int[][] copyMatrix (int[][] matrix){
         int[][] copy = new int[matrix.length][matrix[0].length];
@@ -45,4 +48,9 @@ public class MapModel {
     public boolean checkInHeightSize(int row) {
         return row >= 0 && row < matrix.length;
     }
+
+    public boolean isVictory() {
+        return matrix[4][1] == 4 && matrix[4][2] == 4 && matrix[3][1] == 4 && matrix[3][2] == 4;
+    }
+
 }

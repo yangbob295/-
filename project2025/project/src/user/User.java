@@ -1,10 +1,12 @@
 package user;
 
+import java.io.File;
+
 public class User {
     private String userName;
     private String password;
 
-    public User (String userName, String password) {
+        public User (String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
@@ -23,5 +25,11 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    // 保持原有构造方法和getter/setter
+
+    public String getSavePath(String saveName) {
+        return "saves" + File.separator + userName + File.separator + saveName + ".save";
     }
 }
