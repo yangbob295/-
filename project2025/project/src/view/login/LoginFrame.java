@@ -5,6 +5,7 @@ import view.FrameUtil;
 import view.game.GameFrame;
 import view.game.MutilchoiceFrame;
 import voice.BackgroundMusic;
+import Image.ImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,15 +30,30 @@ public class LoginFrame extends JFrame {
         this.setTitle("梦开始的地方");
         this.setLayout(null);
         this.setSize(width, height);
+
         this.backgroundMusic=new BackgroundMusic("resource\\sound\\zheng3.wav");
-        JLabel userLabel = FrameUtil.createJLabel(this, new Point(50, 20), 70, 40, "用户名:");
-        JLabel passLabel = FrameUtil.createJLabel(this, new Point(50, 80), 70, 40, "密码:");
+        JLabel userLabel = FrameUtil.createJLabel(this, new Point(50, 20), 70, 40, "用户名:",Color.WHITE);
+        JLabel passLabel = FrameUtil.createJLabel(this, new Point(50, 80), 70, 40, "密码:",Color.WHITE);
         username = FrameUtil.createJTextField(this, new Point(120, 20), 120, 40);
         password = FrameUtil.createJTextField(this, new Point(120, 80), 120, 40);
 
         submitBtn = FrameUtil.createButton(this, "登录/注册", new Point(40, 140), 100, 40);
         resetBtn = FrameUtil.createButton(this, "清空", new Point(160, 140), 100, 40);
 
+        //导入背景图
+        // 加载图片（关键修改部分）
+
+        Image image = ImageLoader.loadImage("/view/game/picture/CaoCao.png");
+        if (image != null) {
+            // 方案1：强制缩放图片到窗口大小（简单粗暴）
+            Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            JLabel imageLabel = new JLabel(new ImageIcon(scaledImage)); // 使用缩放后的图片
+            imageLabel.setBounds(0, 0, width, height);
+            this.add(imageLabel);
+        } else {
+            System.err.println("图片加载失败，使用默认背景");
+            this.getContentPane().setBackground(Color.BLACK);
+        }
 
         // 验证用户密码
         submitBtn.addActionListener(e -> {
@@ -59,6 +75,8 @@ public class LoginFrame extends JFrame {
                 mutilchoiceFrame.setVisible(true);
                 this.setVisible(false);
                 //如果验证成功，设置当前用户并显示多选框
+                username.setText("");
+                password.setText("");
             } else {
                 JOptionPane.showMessageDialog(this, "用户名或密码错误！注意用户名不能为Guest！");
             }

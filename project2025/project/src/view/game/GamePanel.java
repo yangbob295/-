@@ -27,7 +27,7 @@ public class GamePanel extends ListenerPanel {
     private int steps;
     private int steplimit=0;
     private int timeLimit=0;
-    private final int GRID_SIZE = 50;
+    private final int GRID_SIZE = 70;
     private BoxComponent selectedBox;
 
     private MutilchoiceFrame mutilchoiceFrame;
@@ -55,7 +55,7 @@ public class GamePanel extends ListenerPanel {
                         Window parentWindow = SwingUtilities.getWindowAncestor(this);
                         if (parentWindow != null) parentWindow.setVisible(false);
 
-                        LoserFrame loserFrame = new LoserFrame(600, 450);
+                        LoserFrame loserFrame = new LoserFrame(1000, 1000);
                         loserFrame.setMutilchoiceFrame(mutilchoiceFrame);
                         loserFrame.setVisible(true);
 
@@ -98,38 +98,38 @@ public class GamePanel extends ListenerPanel {
             for (int j = 0; j < map[0].length; j++) {
                 BoxComponent box = null;
                 if (map[i][j] == 1) {
-                    box = new BoxComponent(Color.ORANGE, i, j);
+                    box = new BoxComponent("/view/game/picture/粉色奶龙.png", i, j);
                     box.setSize(GRID_SIZE, GRID_SIZE);
                     map[i][j] = 0;
                 } else if (map[i][j] == 2) {
-                    box = new BoxComponent(Color.PINK, i, j);
+                    box = new BoxComponent("/view/game/picture/关羽.png", i, j);
                     box.setSize(GRID_SIZE * 2, GRID_SIZE);
                     map[i][j] = 0;
                     map[i][j + 1] = 0;
                 } else if (map[i][j] == 3) {
-                    box = new BoxComponent(Color.BLUE, i, j);
+                    box = new BoxComponent("/view/game/picture/mmk.png", i, j);
                     box.setSize(GRID_SIZE, GRID_SIZE * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;
                 } else if (map[i][j] == 4) {
-                    box = new BoxComponent(Color.GREEN, i, j);
+                    box = new BoxComponent("/view/game/picture/海贼王.png", i, j);
                     box.setSize(GRID_SIZE * 2, GRID_SIZE * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;
                     map[i][j + 1] = 0;
                     map[i + 1][j + 1] = 0;
                 } else if (map[i][j] == 5) {
-                    box = new BoxComponent(Color.RED, i, j);
+                    box = new BoxComponent("/view/game/picture/ang.png", i, j);
                     box.setSize(GRID_SIZE, GRID_SIZE * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;
                 } else if (map[i][j] == 6) {
-                    box = new BoxComponent(Color.YELLOW, i, j);
+                    box = new BoxComponent("/view/game/picture/小孩姐.png", i, j);
                     box.setSize(GRID_SIZE, GRID_SIZE * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;
                 } else if (map[i][j] == 7) {
-                    box = new BoxComponent(Color.CYAN, i, j);
+                    box = new BoxComponent("/view/game/picture/rupa.png", i, j);
                     box.setSize(GRID_SIZE, GRID_SIZE * 2);
                     map[i][j] = 0;
                     map[i + 1][j] = 0;
@@ -245,7 +245,7 @@ public class GamePanel extends ListenerPanel {
                     parentWindow.setVisible(false);
                 }
                 // 显示 VictoryFrame 并关联 MutilchoiceFrame
-                VictoryFrame victoryFrame = new VictoryFrame(600, 450);
+                VictoryFrame victoryFrame = new VictoryFrame(600, 600);
                 victoryFrame.setMutilchoiceFrame(mutilchoiceFrame);
                 victoryFrame.setVisible(true);
 
@@ -264,7 +264,7 @@ public class GamePanel extends ListenerPanel {
                     parentWindow.setVisible(false);
                 }
 
-                LoserFrame loserFrame=new LoserFrame(600,450);
+                LoserFrame loserFrame=new LoserFrame(600,600);
                 loserFrame.setMutilchoiceFrame(mutilchoiceFrame);
                 loserFrame.setVisible(true);
 

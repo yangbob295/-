@@ -10,6 +10,7 @@ import voice.BackgroundMusic;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 //过了登陆界面后的那个面板
@@ -21,6 +22,12 @@ public class GameFrame extends JFrame {
     private JButton loadBtn;
     private JButton saveBtn;
     private JButton backBth;
+
+    private JButton upBtn;
+    private JButton downBtn;
+    private JButton leftBtn;
+    private JButton rightBtn;
+
     private JLabel stepLabel;
     private JLabel timeLabel;
 
@@ -46,12 +53,36 @@ public class GameFrame extends JFrame {
 
         this.controller = new GameController(gamePanel, mapModel);
 
-        this.restartBtn = FrameUtil.createButton(this, "重振旗鼓", new Point(gamePanel.getWidth() + 80, 120), 100, 50);
-        this.loadBtn = FrameUtil.createButton(this, "朝花夕拾", new Point(gamePanel.getWidth() + 80, 210), 100, 50);
-        this.saveBtn = FrameUtil.createButton(this, "鸣金收兵", new Point(gamePanel.getWidth() + 80, 300), 100, 50);
-        this.backBth=FrameUtil.createButton(this, "返回", new Point(gamePanel.getWidth() + 180, 300), 100, 50);
-        this.stepLabel = FrameUtil.createJLabel(this, "你撞上了海带", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 70), 180, 50);
-        this.timeLabel=FrameUtil.createJLabel(this, "时间", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 270, 70), 180, 50);
+        this.restartBtn = FrameUtil.createButton(this, "重振旗鼓", new Point(gamePanel.getWidth() + 80, 80), 100, 50);
+        this.loadBtn = FrameUtil.createButton(this, "朝花夕拾", new Point(gamePanel.getWidth() + 80, 170), 100, 50);
+        this.saveBtn = FrameUtil.createButton(this, "鸣金收兵", new Point(gamePanel.getWidth() + 80, 260), 100, 50);
+        this.backBth=FrameUtil.createButton(this, "返回", new Point(gamePanel.getWidth() + 80, 350), 100, 50);
+
+        this.upBtn=FrameUtil.createButton(this, "⇧", new Point(gamePanel.getWidth() + 290, 155), 50, 50);
+        this.downBtn=FrameUtil.createButton(this, "⇩", new Point(gamePanel.getWidth() + 290, 275), 50, 50);
+        this.leftBtn=FrameUtil.createButton(this, "⇦", new Point(gamePanel.getWidth() + 230, 215), 50, 50);
+        this.rightBtn=FrameUtil.createButton(this, "⇨", new Point(gamePanel.getWidth() + 350, 215), 50, 50);
+
+        //新增方向按钮
+
+
+        this.rightBtn.addActionListener(e -> {
+            gamePanel.doMoveRight();
+        });
+        this.leftBtn.addActionListener(e -> {
+            gamePanel.doMoveLeft();
+        });
+        this.upBtn.addActionListener(e -> {
+            gamePanel.doMoveUp();
+        });
+        this.downBtn.addActionListener(e -> {
+            gamePanel.doMoveDown();
+        });
+
+        //进行方向按钮和实际操作之间的关联
+
+        this.stepLabel = FrameUtil.createJLabel(this, "你撞上了海带", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 30), 180, 50);
+        this.timeLabel=FrameUtil.createJLabel(this, "时间", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 270, 30), 180, 50);
         gamePanel.setStepLabel(stepLabel);
         gamePanel.setTimeLabel(timeLabel);
 
@@ -64,6 +95,7 @@ public class GameFrame extends JFrame {
         //todo: add other button here
 
         this.backBth.addActionListener(e -> {
+
             if (this.mutilchoiceFrame != null) {
                 this.mutilchoiceFrame.setVisible(true);
                 this.setVisible(false);
@@ -73,7 +105,47 @@ public class GameFrame extends JFrame {
 
                 this.gamePanel.getGameTimer().stop();
             }
+
+//            gamePanel.getGameTimer().stop();
+            if (user.getUserName() == "Guest") {
+                return;
+            }
+            String saveName = this.mutilchoiceFrame.getPath();
+            if (saveName != null && !saveName.isEmpty()) {
+                try {
+                    String path = user.getSavePath(saveName);
+                    SaveController.saveGame(controller.getModel(), path, gamePanel.getSteps(), gamePanel.getGameTimer().getSeconds());
+                    JOptionPane.showMessageDialog(this, "已自动保存!");
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "保存失败: " + ex.getMessage());
+                }
+            }
+//            gamePanel.getGameTimer().start();
+//            gamePanel.requestFocusInWindow();
+//
+
         });
+
+//        // 监测gameTimer的dertaSeconds
+//        if (user.getUserName() != "Guest") {
+//            if (gamePanel.getGameTimer().getDertaSeconds() == 29){
+//                String saveName = this.mutilchoiceFrame.getPath();
+//                if (saveName != null && !saveName.isEmpty()) {
+//                    try {
+//                        String path = user.getSavePath(saveName);
+//
+//                        SaveController.saveGame(controller.getModel(), path, gamePanel.getSteps(), gamePanel.getGameTimer().getSeconds());
+//
+//                        //更改：输入了时间
+//
+//                        JOptionPane.showMessageDialog(this, "保存成功!");
+//                    } catch (IOException ex) {
+//                        JOptionPane.showMessageDialog(this, "保存失败: " + ex.getMessage());
+//                    }
+//                }
+//            }
+//            return;
+//        }
 
 
         // 保存按钮
@@ -81,10 +153,12 @@ public class GameFrame extends JFrame {
             gamePanel.getGameTimer().stop();
             if (user.getUserName() == "Guest") {
                 JOptionPane.showMessageDialog(this, "请先登录！");
+                gamePanel.getGameTimer().start();
                 return;
             }
 
-            String saveName = JOptionPane.showInputDialog(this, "输入存档名称:");
+//            String saveName = JOptionPane.showInputDialog(this, "输入存档名称:");
+            String saveName = this.mutilchoiceFrame.getPath();
             if (saveName != null && !saveName.isEmpty()) {
                 try {
                     String path = user.getSavePath(saveName);
@@ -102,10 +176,18 @@ public class GameFrame extends JFrame {
             gamePanel.requestFocusInWindow();
         });
 
+
+
         // 加载按钮
         this.loadBtn.addActionListener(e -> {
             gamePanel.getGameTimer().stop();
-            String saveName = JOptionPane.showInputDialog(this, "输入要加载的存档名称:");
+            if (user.getUserName() == "Guest") {
+                JOptionPane.showMessageDialog(this, "请先登录！");
+                gamePanel.getGameTimer().start();
+                return;
+            }
+//            String saveName = JOptionPane.showInputDialog(this, "输入要加载的存档名称:");
+            String saveName = this.mutilchoiceFrame.getPath();
             if (user == null) {
                 JOptionPane.showMessageDialog(this, "请先登录！");
                 return;
@@ -126,6 +208,11 @@ public class GameFrame extends JFrame {
             }
             gamePanel.getGameTimer().start();
             gamePanel.requestFocusInWindow();
+        });
+
+        this.upBtn.addActionListener(e -> {
+
+            gamePanel.requestFocusInWindow();//enable key listener
         });
 
 

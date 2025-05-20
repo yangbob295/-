@@ -12,6 +12,7 @@ import java.awt.*;
 public class MutilchoiceFrame extends JFrame {
     private int[][][] map;
     private int[][][] copy;
+    private String path = null;
 
     private User currentUser; // 新增用户字段
 
@@ -37,7 +38,7 @@ public class MutilchoiceFrame extends JFrame {
         this.map = map;
 
 
-        JLabel backLabel = FrameUtil.createJLabel(this, new Point(280, 20), 70, 40, "关卡");
+        JLabel backLabel = FrameUtil.createJLabel(this, new Point(280, 20), 70, 40, "关卡",Color.BLACK);
 
         //返回登录的按钮
         backBth = FrameUtil.createButton(this, "返回登录", new Point(250, 100), 100, 40);
@@ -60,13 +61,14 @@ public class MutilchoiceFrame extends JFrame {
                 }
             }
             MapModel model = new MapModel(copy[0]);
-            GameFrame gameFrame = new GameFrame(600, 450, model, this);
+            GameFrame gameFrame = new GameFrame(800, 450, model, this);
             gameFrame.setUser(this.currentUser);
             gameFrame.getGamePanel().setBackgroundMusic(new BackgroundMusic("resource\\sound\\森林.wav"));
             this.gameframe = gameFrame;
             this.loginframe.getBackgroundMusic().stop();
             this.setVisible(false);
             gameFrame.setVisible(true);
+            path = "关卡1";
         });
 
         // 第二关按钮（修正变量名拼写为 secondBtn）
@@ -80,15 +82,16 @@ public class MutilchoiceFrame extends JFrame {
                 }
             }
             MapModel model = new MapModel(copy[1]);
-            GameFrame gameFrame = new GameFrame(600, 450, model, this);
+            GameFrame gameFrame = new GameFrame(800, 450, model, this);
             gameFrame.setUser(this.currentUser);
             gameFrame.getGamePanel().setBackgroundMusic(new BackgroundMusic("resource\\sound\\一周目.wav"));
-            gameFrame.getGamePanel().setSteplimit(20);
-            gameFrame.getGamePanel().setTimeLimit(50);
+            gameFrame.getGamePanel().setSteplimit(5);
+            gameFrame.getGamePanel().setTimeLimit(10);
             this.gameframe = gameFrame;
             this.loginframe.getBackgroundMusic().stop();
             this.setVisible(false);
             gameFrame.setVisible(true);
+            path = "关卡2";
         });
 
         //第三关
@@ -102,13 +105,14 @@ public class MutilchoiceFrame extends JFrame {
                 }
             }
             MapModel model = new MapModel(copy[2]);
-            GameFrame gameFrame = new GameFrame(600, 450, model, this);
+            GameFrame gameFrame = new GameFrame(800, 450, model, this);
             gameFrame.setUser(this.currentUser);
             gameFrame.getGamePanel().setBackgroundMusic(new BackgroundMusic("resource\\sound\\二周目.wav"));
             this.gameframe = gameFrame;
             this.loginframe.getBackgroundMusic().stop();
             this.setVisible(false);
             gameFrame.setVisible(true);
+            path = "关卡3";
         });
 
         //第四关
@@ -122,13 +126,14 @@ public class MutilchoiceFrame extends JFrame {
                 }
             }
             MapModel model = new MapModel(copy[3]);
-            GameFrame gameFrame = new GameFrame(600, 450, model, this);
+            GameFrame gameFrame = new GameFrame(800, 450, model, this);
             gameFrame.setUser(this.currentUser);
             gameFrame.getGamePanel().setBackgroundMusic(new BackgroundMusic("resource\\sound\\三周目.wav"));
             this.gameframe = gameFrame;
             this.loginframe.getBackgroundMusic().stop();
             this.setVisible(false);
             gameFrame.setVisible(true);
+            path = "关卡4";
         });
     }
 
@@ -138,9 +143,12 @@ public class MutilchoiceFrame extends JFrame {
     public LoginFrame getLoginframe(){ return this.loginframe; }
 
 
+
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
 
-
+    public String getPath() {
+        return path;
+    }
 }

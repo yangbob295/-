@@ -6,16 +6,23 @@ import java.util.function.Consumer;
 public class GameTimer {
     private Timer timer;
     private int seconds = 0;
+    private int dertaSeconds = 0;
     private Consumer<Integer> timeUpdateCallback; // 新增回调接口
 
     public GameTimer(Consumer<Integer> callback) {
         this.timeUpdateCallback = callback;
         timer = new Timer(1000, e -> {
             seconds++;
+            dertaSeconds = seconds%30;
             if (timeUpdateCallback != null) {
                 timeUpdateCallback.accept(seconds); // 触发回调
             }
+            if (dertaSeconds == 29 ){
+                dertaSeconds = 0;
+                System.out.println("已自动保存");
+            }
             System.out.println("已运行: " + seconds + "秒");
+            System.out.println("距离上次保存: " + dertaSeconds + "秒");
         });
     }
 
@@ -33,4 +40,9 @@ public class GameTimer {
     public int getSeconds() {
         return seconds;
     }
+
+    public int getDertaSeconds() {
+        return dertaSeconds;
+    }
+
 }

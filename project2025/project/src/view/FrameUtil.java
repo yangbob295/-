@@ -19,12 +19,20 @@ public class FrameUtil {
      * @param text     要在标签上显示的文本
      * @return 创建的JLabel实例
      */
-    public static JLabel createJLabel(JFrame frame, Point location, int width, int height, String text) {
-        JLabel jLabel = new JLabel(text);  // 创建带有指定文本的新JLabel
-        jLabel.setSize(width, height);     // 设置标签的尺寸
-        jLabel.setLocation(location);      // 设置标签的位置
-        frame.add(jLabel);                 // 将标签添加到框架中
-        return jLabel;                     // 返回创建的标签，以便后续可能的配置
+    public static JLabel createJLabel(JFrame frame, Point location, int width, int height,
+                                      String text, Color textColor) {
+        JLabel jLabel = new JLabel(text);
+        jLabel.setSize(width, height);
+        jLabel.setLocation(location);
+
+        // 设置文本颜色（如果参数不为null）
+        if (textColor != null) {
+            jLabel.setForeground(textColor);
+        }
+
+
+        frame.add(jLabel);
+        return jLabel;
     }
 
     /**
