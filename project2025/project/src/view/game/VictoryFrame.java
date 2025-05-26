@@ -16,7 +16,7 @@ public class VictoryFrame extends JFrame {
     private BackgroundMusic backgroundMusic;
 
 
-    public VictoryFrame(int height, int width) {
+    public VictoryFrame(int height, int width, int step) {
         this.setSize(height, width);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -27,8 +27,20 @@ public class VictoryFrame extends JFrame {
 //        this.backgroundMusic=new BackgroundMusic("C:\\Users\\ASUS\\IdeaProjects\\Project2.0\\resource\\sound\\pirate.wav");
         this.backgroundMusic = new BackgroundMusic("resource/sound/pirate.wav");
 
+        JLabel label = new JLabel("孩子们，三段超长绝美蠕动，如何呢？");
+        label.setBounds(50, 50, 600, 50);
+        label.setFont(new Font("微软雅黑", Font.BOLD, 30));
+//        label.setForeground(Color.WHITE);
+        this.add(label);
+
+        JLabel labelstep = new JLabel(String.format("获胜步数：%d", step));
+        labelstep.setBounds(205, 100, 200, 50);
+        labelstep.setFont(new Font("微软雅黑", Font.BOLD, 30));
+//        labelstep.setForeground(Color.YELLOW);
+        this.add(labelstep);
+
         // 加载图片（关键修改部分）
-        Image image = ImageLoader.loadImage("/view/game/picture/海贼王.png");
+        Image image = ImageLoader.loadImage("/view/game/picture/曹操胜利.jpg");
         if (image != null) {
             // 方案1：强制缩放图片到窗口大小（简单粗暴）
             Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -40,9 +52,15 @@ public class VictoryFrame extends JFrame {
             this.getContentPane().setBackground(Color.BLACK);
         }
 
-        JLabel label = new JLabel("孩子们，三段超长绝美蠕动，如何呢？");
-        label.setBounds(50, 50, 220, 50);
-        this.add(label);
+
+
+
+//        JLabel label = new JLabel("孩子们，三段超长绝美蠕动，如何呢？");
+//        label.setBounds(50, 50, 220, 50);
+//        JLabel labelstep = new JLabel(String.format("获胜步数：%d",step));
+//        label.setBounds(205, 100, 220, 50);
+//        label.setFont(new Font("微软雅黑", Font.BOLD, 30));
+
         this.setVisible(true);
 
         //加入一个返回键，点击返回键就回到多选界面

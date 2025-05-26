@@ -22,7 +22,7 @@ public class LoserFrame extends JFrame {
         this.setTitle("败者食尘");
 
         // 加载图片（关键修改部分）
-        Image image = ImageLoader.loadImage("/view/game/picture/海贼man.png");
+        Image image = ImageLoader.loadImage("/view/game/picture/曹操战败.jpg");
         if (image != null) {
             // 方案1：强制缩放图片到窗口大小（简单粗暴）
             Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -42,7 +42,7 @@ public class LoserFrame extends JFrame {
         this.add(label);
 
         // 按钮（置于图片上层）
-        backBth = FrameUtil.createButton(this, "孩子们，扣1复活，佛祖陪你笑", new Point(0, 300), 220, 40);
+        backBth = FrameUtil.createButton(this, "孩子们，扣1复活，佛祖陪你笑", new Point(215, 500), 220, 40);
         backBth.addActionListener(e -> handleButtonClick());
 
         // 音乐初始化

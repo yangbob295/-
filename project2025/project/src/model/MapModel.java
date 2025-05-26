@@ -40,6 +40,13 @@ public class MapModel {
     public int[][] getMatrix() {
         return matrix;
     }
+    public void setMatrix(int[][] matrix){
+        for(int i=0;i<matrix.length;i++){
+            for (int j=0;j<matrix[0].length;j++){
+                this.matrix[i][j]=matrix[i][j];
+            }
+        }
+    }
 
     public boolean checkInWidthSize(int col) {
         return col >= 0 && col < matrix[0].length;

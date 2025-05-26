@@ -53,6 +53,61 @@ public class BoxComponent extends JComponent {
         this.repaint();
     }
 
+    public void animateMoveTo(int targetX, int targetY) {
+        int delay = 10;
+        int duration = 300;
+        int steps = Math.max(2, duration / delay);
+
+        Point start = getLocation();
+        final double startX = start.x;
+        final double startY = start.y;
+        final double dx = targetX - startX;
+        final double dy = targetY - startY;
+
+        final int[] count = {0};
+
+        // ✅ 设置高亮边框，提示用户正在移动
+        setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
+
+        Timer timer = new Timer(delay, null);
+        timer.addActionListener(e -> {
+            if (count[0] <= steps) {
+                double t = (double) count[0] / steps;
+
+                // ✅ 使用缓动函数（easeOut）: 快到慢
+                double easedT = t * (2 - t);
+
+                int newX = (int) (startX + dx * easedT);
+                int newY = (int) (startY + dy * easedT);
+                setBounds(newX, newY, getWidth(), getHeight());
+
+                Container parent = getParent();
+                if (parent != null) {
+                    parent.repaint();
+                }
+
+                count[0]++;
+                repaint();
+            } else {
+                setBounds(targetX, targetY, getWidth(), getHeight());
+
+                // ✅ 动画结束后恢复普通边框
+                setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+                ((Timer) e.getSource()).stop();
+                repaint();
+            }
+        });
+
+        timer.start();
+    }
+
+
+
+
+
+
+
+
     public int getRow() {
         return row;
     }

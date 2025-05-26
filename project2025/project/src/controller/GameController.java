@@ -33,6 +33,12 @@ public class GameController {
         this.view.initialGame(modelcopy.getMatrix(),0,0);
     }
 
+    public void recallGame(){
+        this.model.resetOriginalMatrix();
+        this.view.clearAllBoxFromPanel();
+        this.view.initialGame(modelcopy.getMatrix(),0,0);
+    }
+
     public boolean doMove(int row, int col, Direction direction) {
         //对单个的box进行操作
         if (model.getId(row, col) == 1) {
@@ -45,8 +51,10 @@ public class GameController {
                     BoxComponent box = view.getSelectedBox();
                     box.setRow(nextRow);
                     box.setCol(nextCol);
-                    box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
-                    box.repaint();
+                    // 使用动画方法替代直接设置位置
+                    int targetX = nextCol * view.getGRID_SIZE() + 2;
+                    int targetY = nextRow * view.getGRID_SIZE() + 2;
+                    box.animateMoveTo(targetX, targetY);
                     return true;
                 }
             }
@@ -283,18 +291,33 @@ public class GameController {
         BoxComponent box = view.getSelectedBox();
         box.setRow(nextRow);
         box.setCol(nextCol);
-        box.setLocation(box.getCol() * view.getGRID_SIZE() + 2, box.getRow() * view.getGRID_SIZE() + 2);
-        box.repaint();
+        int targetX = nextCol * view.getGRID_SIZE() + 2;
+        int targetY = nextRow * view.getGRID_SIZE() + 2;
+        box.animateMoveTo(targetX, targetY);  // 使用动画方法
     }
+
 
     public MapModel getModel() {
         return model;
+    }
+    public void setModel(MapModel model){
+        this.model=model;
     }
 
 
     public void loadGame(MapModel newModel, int loadStep, int loadSecond) {
         this.model = newModel;
         this.view.setModel(newModel);
+        int[][] copy=new int[newModel.getMatrix().length][newModel.getMatrix()[0].length];
+        for (int i=0;i<newModel.getMatrix().length;i++){
+            for (int j=0; j<newModel.getMatrix()[0].length;j++){
+                copy[i][j]=newModel.getMatrix()[i][j];
+            }
+        }
+        view.getMapList().clear();
+        view.getStepList().clear();
+        view.getMapList().add(copy);
+        view.getStepList().add(loadStep);
         view.clearAllBoxFromPanel();
         view.initialGame(model.getMatrix(),loadStep,loadSecond);
     }

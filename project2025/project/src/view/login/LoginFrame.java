@@ -32,18 +32,24 @@ public class LoginFrame extends JFrame {
         this.setSize(width, height);
 
         this.backgroundMusic=new BackgroundMusic("resource\\sound\\zheng3.wav");
-        JLabel userLabel = FrameUtil.createJLabel(this, new Point(50, 20), 70, 40, "用户名:",Color.WHITE);
-        JLabel passLabel = FrameUtil.createJLabel(this, new Point(50, 80), 70, 40, "密码:",Color.WHITE);
-        username = FrameUtil.createJTextField(this, new Point(120, 20), 120, 40);
-        password = FrameUtil.createJTextField(this, new Point(120, 80), 120, 40);
+        JLabel userLabel = FrameUtil.createJLabel(this, new Point(200, 220), 70, 40, "用户名:",Color.PINK);
+        JLabel passLabel = FrameUtil.createJLabel(this, new Point(200, 280), 70, 40, "密码:",Color.PINK);
+        username = FrameUtil.createJTextField(this, new Point(270, 220), 120, 40);
+        password = FrameUtil.createJTextField(this, new Point(270, 280), 120, 40);
 
-        submitBtn = FrameUtil.createButton(this, "登录/注册", new Point(40, 140), 100, 40);
-        resetBtn = FrameUtil.createButton(this, "清空", new Point(160, 140), 100, 40);
+        submitBtn = FrameUtil.createButton(this, "登录/注册", new Point(190, 340), 100, 40);
+        resetBtn = FrameUtil.createButton(this, "清空", new Point(310, 340), 100, 40);
+
+        JLabel label = new JLabel("输入用户名和密码即可注册，直接点击登录进入游客模式");
+        label.setForeground(Color.BLACK); // 黑色文字确保可见
+        label.setFont(new Font("微软雅黑", Font.BOLD, 16));
+        label.setBounds(90, 30, 600, 50);
+        this.add(label);
 
         //导入背景图
         // 加载图片（关键修改部分）
 
-        Image image = ImageLoader.loadImage("/view/game/picture/CaoCao.png");
+        Image image = ImageLoader.loadImage("/view/game/picture/封面.jpg");
         if (image != null) {
             // 方案1：强制缩放图片到窗口大小（简单粗暴）
             Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -54,6 +60,8 @@ public class LoginFrame extends JFrame {
             System.err.println("图片加载失败，使用默认背景");
             this.getContentPane().setBackground(Color.BLACK);
         }
+
+
 
         // 验证用户密码
         submitBtn.addActionListener(e -> {
@@ -78,7 +86,7 @@ public class LoginFrame extends JFrame {
                 username.setText("");
                 password.setText("");
             } else {
-                JOptionPane.showMessageDialog(this, "用户名或密码错误！注意用户名不能为Guest！");
+                JOptionPane.showMessageDialog(this, "用户名或密码错误！");
             }
         });
 

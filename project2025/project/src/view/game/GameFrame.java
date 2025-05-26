@@ -22,6 +22,8 @@ public class GameFrame extends JFrame {
     private JButton loadBtn;
     private JButton saveBtn;
     private JButton backBth;
+    private JButton withdrawBth;
+    private JButton autoBtn;
 
     private JButton upBtn;
     private JButton downBtn;
@@ -45,6 +47,7 @@ public class GameFrame extends JFrame {
         this.setSize(width, height);
         this.mutilchoiceFrame=mutilchoiceFrame;
 
+
         gamePanel = new GamePanel(mapModel);
         gamePanel.setLocation(30, height / 2 - gamePanel.getHeight() / 2);
         //此处添加了location修改，初始为30
@@ -57,6 +60,8 @@ public class GameFrame extends JFrame {
         this.loadBtn = FrameUtil.createButton(this, "朝花夕拾", new Point(gamePanel.getWidth() + 80, 170), 100, 50);
         this.saveBtn = FrameUtil.createButton(this, "鸣金收兵", new Point(gamePanel.getWidth() + 80, 260), 100, 50);
         this.backBth=FrameUtil.createButton(this, "返回", new Point(gamePanel.getWidth() + 80, 350), 100, 50);
+        this.withdrawBth=FrameUtil.createButton(this, "撤回", new Point(gamePanel.getWidth() + 270, 80), 100, 50);
+        this.autoBtn = FrameUtil.createButton(this, "天命在我", new Point(gamePanel.getWidth() + 270, 350), 100, 50);
 
         this.upBtn=FrameUtil.createButton(this, "⇧", new Point(gamePanel.getWidth() + 290, 155), 50, 50);
         this.downBtn=FrameUtil.createButton(this, "⇩", new Point(gamePanel.getWidth() + 290, 275), 50, 50);
@@ -68,20 +73,24 @@ public class GameFrame extends JFrame {
 
         this.rightBtn.addActionListener(e -> {
             gamePanel.doMoveRight();
+            gamePanel.requestFocusInWindow();
         });
         this.leftBtn.addActionListener(e -> {
             gamePanel.doMoveLeft();
+            gamePanel.requestFocusInWindow();
         });
         this.upBtn.addActionListener(e -> {
             gamePanel.doMoveUp();
+            gamePanel.requestFocusInWindow();
         });
         this.downBtn.addActionListener(e -> {
             gamePanel.doMoveDown();
+            gamePanel.requestFocusInWindow();
         });
 
         //进行方向按钮和实际操作之间的关联
 
-        this.stepLabel = FrameUtil.createJLabel(this, "你撞上了海带", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 30), 180, 50);
+        this.stepLabel = FrameUtil.createJLabel(this, "开始", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 80, 30), 180, 50);
         this.timeLabel=FrameUtil.createJLabel(this, "时间", new Font("serif", Font.ITALIC, 22), new Point(gamePanel.getWidth() + 270, 30), 180, 50);
         gamePanel.setStepLabel(stepLabel);
         gamePanel.setTimeLabel(timeLabel);
@@ -93,6 +102,21 @@ public class GameFrame extends JFrame {
         });
 
         //todo: add other button here
+
+        this.withdrawBth.addActionListener(e -> {
+            if(this.gamePanel.getMapList().size()>=2){
+                this.gamePanel.getMapList().remove(0);
+                this.gamePanel.getStepList().remove(0);
+                this.gamePanel.clearAllBoxFromPanel();
+                this.controller.getModel().setMatrix(this.gamePanel.getMapList().get(0));
+                this.gamePanel.initialGame(this.gamePanel.getMapList().get(0),this.gamePanel.getStepList().get(0),this.gamePanel.getGameTimer().getSeconds());
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "退无可退!");
+            }
+            gamePanel.requestFocusInWindow();
+        });
+
 
         this.backBth.addActionListener(e -> {
 
@@ -210,10 +234,6 @@ public class GameFrame extends JFrame {
             gamePanel.requestFocusInWindow();
         });
 
-        this.upBtn.addActionListener(e -> {
-
-            gamePanel.requestFocusInWindow();//enable key listener
-        });
 
 
         this.setLocationRelativeTo(null);
@@ -232,5 +252,7 @@ public class GameFrame extends JFrame {
     }
 
     public GamePanel getGamePanel(){ return gamePanel; }
+
+    public GameController getController(){return controller; }
 
 }
