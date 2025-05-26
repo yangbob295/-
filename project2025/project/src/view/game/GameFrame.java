@@ -12,9 +12,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 //过了登陆界面后的那个面板
 public class GameFrame extends JFrame {
+    private ArrayList<int[][]> solution=new ArrayList<>();
 
     private GameController controller;
 
@@ -46,7 +48,6 @@ public class GameFrame extends JFrame {
         this.setLayout(null);
         this.setSize(width, height);
         this.mutilchoiceFrame=mutilchoiceFrame;
-
 
         gamePanel = new GamePanel(mapModel);
         gamePanel.setLocation(30, height / 2 - gamePanel.getHeight() / 2);
@@ -101,7 +102,7 @@ public class GameFrame extends JFrame {
             gamePanel.requestFocusInWindow();//enable key listener
         });
 
-        //todo: add other button here
+
 
         this.withdrawBth.addActionListener(e -> {
             if(this.gamePanel.getMapList().size()>=2){
@@ -115,6 +116,89 @@ public class GameFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "退无可退!");
             }
             gamePanel.requestFocusInWindow();
+        });
+
+        this.autoBtn.addActionListener(e -> {
+            this.gamePanel.getGameTimer().stop();
+
+            int stepna=this.gamePanel.getMapList().size();
+            if (this.gamePanel.getMapList().size() >= 2) {
+                withdrawBth.setEnabled(false);
+
+                // 第一个 Timer（撤回历史步骤）
+                Timer timer1 = new Timer(125, evt -> {
+                    if (this.gamePanel.getMapList().size() >= 2) {
+                        // 撤回逻辑...
+                        BoxComponent selectedBox = this.gamePanel.getSelectedBox();
+                        int currentRow = (selectedBox != null) ? selectedBox.getRow() : -1;
+                        int currentCol = (selectedBox != null) ? selectedBox.getCol() : -1;
+
+                        int[][] prevMatrix = this.gamePanel.getMapList().get(1);
+
+                        this.gamePanel.getMapList().remove(0);
+                        this.gamePanel.clearAllBoxFromPanel();
+                        this.controller.getModel().setMatrix(prevMatrix);
+                        this.gamePanel.initialGame(prevMatrix, stepna-this.gamePanel.getMapList().size(), this.gamePanel.getGameTimer().getSeconds());
+                    } else {
+                        ((Timer) evt.getSource()).stop(); // 停止第一个 Timer
+
+                        // 第一个 Timer 结束后，启动第二个 Timer（执行解法步骤）
+                        int stepni=solution.size();
+                        withdrawBth.setEnabled(false);
+                        if (solution.size() >= 1) {
+                            Timer timer2 = new Timer(125, evt2 -> {
+                                if (solution.size() >= 1) {
+                                    int[][] matrix = solution.remove(0);
+                                    this.gamePanel.clearAllBoxFromPanel();
+                                    this.controller.getModel().setMatrix(matrix);
+                                    this.gamePanel.initialGame(matrix, stepna+stepni - solution.size()-1, 000);
+                                } else {
+                                    ((Timer) evt2.getSource()).stop();
+                                    System.out.println("You win!");
+                                    SwingUtilities.invokeLater(() -> {
+                                        this.setVisible(false);
+                                        VictoryFrame victoryFrame = new VictoryFrame(650, 650, stepni+stepna-1);
+                                        victoryFrame.setMutilchoiceFrame(mutilchoiceFrame);
+                                        victoryFrame.setVisible(true);
+                                        this.gamePanel.getbgm().stop();
+                                    });
+                                }
+                            });
+                            timer2.setRepeats(true);
+                            timer2.start();
+                        }
+                    }
+                });
+
+                timer1.setRepeats(true);
+                timer1.start();
+            }else {
+                // 第一个 Timer 结束后，启动第二个 Timer（执行解法步骤）
+                int stepni=solution.size();
+                withdrawBth.setEnabled(false);
+                if (solution.size() >= 1) {
+                    Timer timer2 = new Timer(125, evt2 -> {
+                        if (solution.size() >= 1) {
+                            int[][] matrix = solution.remove(0);
+                            this.gamePanel.clearAllBoxFromPanel();
+                            this.controller.getModel().setMatrix(matrix);
+                            this.gamePanel.initialGame(matrix, stepna+stepni - solution.size()-1, 000);
+                        } else {
+                            ((Timer) evt2.getSource()).stop();
+                            System.out.println("You win!");
+                            SwingUtilities.invokeLater(() -> {
+                                this.setVisible(false);
+                                VictoryFrame victoryFrame = new VictoryFrame(650, 650, stepni);
+                                victoryFrame.setMutilchoiceFrame(mutilchoiceFrame);
+                                victoryFrame.setVisible(true);
+                                this.gamePanel.getbgm().stop();
+                            });
+                        }
+                    });
+                    timer2.setRepeats(true);
+                    timer2.start();
+                }
+            }
         });
 
 
@@ -144,32 +228,11 @@ public class GameFrame extends JFrame {
                     JOptionPane.showMessageDialog(this, "保存失败: " + ex.getMessage());
                 }
             }
-//            gamePanel.getGameTimer().start();
-//            gamePanel.requestFocusInWindow();
-//
+
 
         });
 
-//        // 监测gameTimer的dertaSeconds
-//        if (user.getUserName() != "Guest") {
-//            if (gamePanel.getGameTimer().getDertaSeconds() == 29){
-//                String saveName = this.mutilchoiceFrame.getPath();
-//                if (saveName != null && !saveName.isEmpty()) {
-//                    try {
-//                        String path = user.getSavePath(saveName);
-//
-//                        SaveController.saveGame(controller.getModel(), path, gamePanel.getSteps(), gamePanel.getGameTimer().getSeconds());
-//
-//                        //更改：输入了时间
-//
-//                        JOptionPane.showMessageDialog(this, "保存成功!");
-//                    } catch (IOException ex) {
-//                        JOptionPane.showMessageDialog(this, "保存失败: " + ex.getMessage());
-//                    }
-//                }
-//            }
-//            return;
-//        }
+
 
 
         // 保存按钮
@@ -234,6 +297,10 @@ public class GameFrame extends JFrame {
             gamePanel.requestFocusInWindow();
         });
 
+        this.upBtn.addActionListener(e -> {
+
+            gamePanel.requestFocusInWindow();//enable key listener
+        });
 
 
         this.setLocationRelativeTo(null);
@@ -254,5 +321,9 @@ public class GameFrame extends JFrame {
     public GamePanel getGamePanel(){ return gamePanel; }
 
     public GameController getController(){return controller; }
+
+    public void setSolution(ArrayList<int[][]> solution ){
+        this.solution=solution;
+    }
 
 }

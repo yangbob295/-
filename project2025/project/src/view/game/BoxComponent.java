@@ -55,7 +55,7 @@ public class BoxComponent extends JComponent {
 
     public void animateMoveTo(int targetX, int targetY) {
         int delay = 10;
-        int duration = 300;
+        int duration = 200;
         int steps = Math.max(2, duration / delay);
 
         Point start = getLocation();

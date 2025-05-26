@@ -33,7 +33,7 @@ public class LoginFrame extends JFrame {
 
         this.backgroundMusic=new BackgroundMusic("resource\\sound\\zheng3.wav");
         JLabel userLabel = FrameUtil.createJLabel(this, new Point(200, 220), 70, 40, "用户名:",Color.PINK);
-        JLabel passLabel = FrameUtil.createJLabel(this, new Point(200, 280), 70, 40, "密码:",Color.PINK);
+        JLabel passLabel = FrameUtil.createJLabel(this, new Point(200, 280), 70, 40, "密码:",Color.BLUE);
         username = FrameUtil.createJTextField(this, new Point(270, 220), 120, 40);
         password = FrameUtil.createJTextField(this, new Point(270, 280), 120, 40);
 
@@ -60,8 +60,6 @@ public class LoginFrame extends JFrame {
             System.err.println("图片加载失败，使用默认背景");
             this.getContentPane().setBackground(Color.BLACK);
         }
-
-
 
         // 验证用户密码
         submitBtn.addActionListener(e -> {

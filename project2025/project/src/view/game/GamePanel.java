@@ -384,4 +384,6 @@ public class GamePanel extends ListenerPanel {
     public ArrayList<Integer> getStepList(){
         return this.stepList;
     }
+
+    public BackgroundMusic getbgm(){return this.backgroundMusic; }
 }

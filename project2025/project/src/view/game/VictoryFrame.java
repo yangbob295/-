@@ -34,7 +34,7 @@ public class VictoryFrame extends JFrame {
         this.add(label);
 
         JLabel labelstep = new JLabel(String.format("获胜步数：%d", step));
-        labelstep.setBounds(205, 100, 200, 50);
+        labelstep.setBounds(205, 100, 400, 50);
         labelstep.setFont(new Font("微软雅黑", Font.BOLD, 30));
 //        labelstep.setForeground(Color.YELLOW);
         this.add(labelstep);
